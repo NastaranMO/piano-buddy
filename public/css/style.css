@@ -432,6 +432,7 @@ label.radio > .control-indicator {
   border: 2px solid #cdf352;
   box-shadow: 8px 8px 0 #cdf352;
   text-align: left;
+  overflow: scroll;
 }
 
 .dialog select,
@@ -483,56 +484,6 @@ label.radio > .control-indicator {
   color: black;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .splash {
   font-size: 18px;
   padding: 20px;
@@ -545,6 +496,7 @@ label.radio > .control-indicator {
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  overflow: scroll;
 }
 
 .splash h1 {

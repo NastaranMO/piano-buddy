@@ -448,15 +448,16 @@ class MusicSequence {
  * Timer
  ************************/
 class Timer {
-  constructor(seconds) {
-    this.seconds = seconds || 10;
+  constructor() {
     this.timerContainer = document.getElementById("info-container");
-    this.currentTime = this.seconds;
     this.isRunning = false;
     this.interval = null;
+    this.currentTime = 0;
   }
-  start = (callback) => {
+  start = (callback, seconds) => {
+    
     if (this.isRunning) return;
+    this.currentTime = seconds;
     this.isRunning = true;
 
     this.timerContainer.innerHTML = '';
@@ -464,7 +465,7 @@ class Timer {
     
     const pElement = document.createElement('p');
     pElement.className = 'info-text';
-    pElement.textContent = this.seconds;
+    pElement.textContent = seconds;
     this.timerContainer.appendChild(pElement);
 
     this.interval = setInterval(() => {
@@ -481,16 +482,12 @@ class Timer {
   reset = () => {
     this.clear();
 
-    this.currentTime = this.seconds;
     this.isRunning = false;
     this.interval = null;
     this.toggleTimer();
   }
   toggleTimer = () => {
     this.timerContainer.style.display = this.isRunning ? 'block' : 'none';
-  }
-  setTimer = (seconds) => {
-    this.seconds = seconds
   }
   clear = () => {
     if (!this.isRunning || !this.interval) {

@@ -524,7 +524,7 @@ const buttonDown = async (button, fromKeyDown, setTimer) => {
   }
   timer.start(async () => {
     await aiTurn();
-  });
+  }, timerSeconds);
   // See it.
   const rect = piano.highlightNote(note, button);
 
