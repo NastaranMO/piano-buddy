@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run build;node server.js",
     "build": "rm public/js/buddy.js; uglifyjs src/*.js -o public/js/buddy.js --mangle"
   },
   "repository": {
