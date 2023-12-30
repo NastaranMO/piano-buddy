@@ -211,28 +211,77 @@ a:visited {
 }
 
 @media screen and (max-width: 500px) {
-  /*   .splash {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100vh;
-    } */
-  .dialog {
-      width: 90%;
-      max-width: none;
-    }
-  .rotate-phone {
-    display: block;
+  /* Body and font adjustments */
+  body {
+    font-size: 14px; /* Smaller font size for body text */
   }
+
+  /* Heading adjustments */
+  h1 {
+    font-size: 24px; /* Smaller font size for headings */
+  }
+
+  /* Button size adjustments */
+  .splash-button {
+    font-size: 18px; /* Smaller font size for buttons */
+  }
+
+  /* Piano keys adjustments */
+  .controls button {
+    height: 50px; /* Adjust the height of the piano keys */
+  }
+
+  /* Splash container and dialog box adjustments */
+  .splash,
+  .dialog {
+    width: 90%; /* Use more screen width */
+    padding: 10px; /* Reduce padding */
+  }
+
+  /* Controls layout adjustments */
+  .controls {
+    bottom: 10px; /* Adjust position */
+    height: 60px; /* Reduce height */
+  }
+
+  /* Canvas and SVG adjustments */
+  canvas,
+  #svg {
+    max-width: 100%; /* Ensure they don't overflow the screen width */
+    height: auto; /* Adjust height automatically */
+  }
+
+  /* Info container and its contents */
+  #info-container {
+    width: 90%; /* Adjust width to use more of the screen */
+    margin: 10px auto; /* Center it with margin */
+    padding: 10px; /* Add padding for better spacing */
+    border-radius: 10px; /* Rounded corners */
+    background-color: rgba(255, 255, 255, 0.1); /* Slight background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    overflow: hidden; /* Ensures container respects border radius */
+  }
+
   .info-text {
-    font-size: 18px; /* Adjusted font size for smaller screens */
+    font-size: 16px!important; 
+    line-height: 1.4; /* Adjust line height for better text flow */
+    color: #fff; /* Adjust text color if needed */
+    text-align: center; /* Align text to the left */
   }
 
   .hint-playing {
-    font-size: 12px; /* Adjusted font size for smaller screens */
+    display: none!important; /* Display as block for proper spacing */
+    font-size: 14px!important; /* Smaller font size for hints */
+    color: #cdf352!important; /* Different color for emphasis */
+    margin-top: 10px!important; /* Extra space above the hint text */
+  }
+
+  /* Dialog box improvements */
+  .dialog {
+    max-height: 70vh; /* Limit the height */
+    overflow-y: auto; /* Allow scrolling */
   }
 }
-
 
 button.splash-button {
   cursor: pointer;
@@ -270,10 +319,9 @@ button.splash-button.small {
   }
 }
 
-
 /***********************
    * Radio buttons
-   ***********************/
+***********************/
 .control-indicator {
   border: solid #cdf352 2px;
   color: #cdf352;
@@ -317,6 +365,10 @@ label.radio > .control-indicator {
   transform: translate(-50%, -50%);
   text-align: center;
   z-index: 10;
+  overflow: scroll;
+}
+#settingsBox {
+  overflow: scroll;
 }
 
 .info-text {
@@ -359,7 +411,7 @@ label.radio > .control-indicator {
   font-size: 16px;
   border: none;
   border-radius: 5px;
-  background-color: #2196f3; 
+  background-color: #2196f3;
   color: white;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -403,8 +455,6 @@ label.radio > .control-indicator {
 .hint {
   color: #808080;
 }
-
-
 
 .dialog button.splash-button.small {
   padding: 8px 16px; /* Adjusted padding for better appearance */
@@ -514,7 +564,6 @@ label.radio > .control-indicator {
 .splash .text-center {
   text-align: center;
 }
-
 
 .splash b {
   background: #cdf352;
