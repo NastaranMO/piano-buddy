@@ -35,6 +35,7 @@ const modelConfig = {
     console.log(`stepsPerQuarter: ${modelConfig.stepsPerQuarter} | steps: ${modelConfig.steps} | temperature: ${modelConfig.temperature}`);
   }
 }
+let timerSeconds = 10;
 
 let keyWhitelist;
 let TEMPERATURE = 0.25;
@@ -57,7 +58,7 @@ const musicRNN = new mm.MusicRNN(
 );
 const painter = new FloatyNotes();
 const piano = new Piano();
-const timer = new Timer(3);
+const timer = new Timer(timerSeconds);
 const infoContainer = document.getElementById("info-container");
 
 let isUsingMakey = false;
@@ -136,6 +137,12 @@ function initEverything() {
     .addEventListener(
       "change",
       (event) => modelConfig.temperature = parseFloat(event.target.value)
+    );  
+  document
+    .getElementById("timerTextInput")
+    .addEventListener(
+      "change",
+      (event) => timerSeconds = parseInt(event.target.value)
     );  
   document
     .getElementById("configBoxButton")
