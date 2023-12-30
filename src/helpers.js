@@ -1,3 +1,15 @@
+/**
+ * CONSTANTS
+ *
+ * Object containing constant values used throughout the application.
+ *
+ * - COLORS: Array of color strings used for piano key styling
+ * - NUM_BUTTONS: Number of piano keys to display
+ * - NOTES_PER_OCTAVE: Number of notes in a piano octave
+ * - WHITE_NOTES_PER_OCTAVE: Number of white keys in a piano octave
+ * - LOWEST_PIANO_KEY_MIDI_NOTE: MIDI note number of the lowest piano key
+ * - GENIE_CHECKPOINT: URL to access the Magenta piano genie model
+ */
 const CONSTANTS = {
   COLORS: [
     "#EE2B29",
@@ -8,7 +20,7 @@ const CONSTANTS = {
     "#2979ff",
     "#651fff",
     "#d500f9",
-    
+
     "#4CAF50", // AI Colors
   ],
   NUM_BUTTONS: 8,
@@ -19,10 +31,26 @@ const CONSTANTS = {
     "https://storage.googleapis.com/magentadata/js/checkpoints/piano_genie/model/epiano/stp_iq_auto_contour_dt_166006",
 };
 
-/*************************
- * Magenta player
- ************************/
+/**
+ * Magenta player class to handle audio playback and interaction with Magenta models.
+ *
+ * Has methods to:
+ * - Load instrument samples
+ * - Play/stop notes using WebAudio or by sending MIDI messages
+ * - Start/stop Magenta model sequence playback
+ * - Check if a sequence is currently playing
+ */
 class Player {
+  /**
+   * Constructor for the Player class.
+   *
+   * Initializes:
+   * - this.player: Magenta SoundFontPlayer instance
+   * - this.midiOut/this.midiIn: MIDI input/output port arrays
+   * - this.usingMidiOut/this.usingMidiIn: Booleans tracking if MIDI is enabled
+   * - this.selectOut/InElement: DOM elements for MIDI port selects
+   * - Calls this.loadAllSamples() to load instrument samples
+   */
   constructor() {
     this.player = new mm.SoundFontPlayer(
       "https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus"
@@ -36,6 +64,10 @@ class Player {
     this.loadAllSamples();
   }
 
+  /**
+   * Loads all instrument samples into the player by constructing a sequence
+   * with notes corresponding to all piano keys, and passing it to loadSamples().
+   */
   loadAllSamples() {
     const seq = { notes: [] };
     for (let i = 0; i < CONSTANTS.NOTES_PER_OCTAVE * OCTAVES; i++) {
@@ -44,6 +76,12 @@ class Player {
     this.player.loadSamples(seq);
   }
 
+  /**
+   * Plays a note down event, sending the note on message over MIDI if enabled,
+   * or playing the note with the Magenta player.
+   * @param {number} pitch - The MIDI pitch number of the note to play.
+   * @param {Object} button - The button element that was clicked to play the note.
+   */
   playNoteDown(pitch, button) {
     // Send to MIDI out or play with the Magenta player.
     if (this.usingMidiOut) {
@@ -54,6 +92,12 @@ class Player {
     }
   }
 
+  /**
+   * Plays a note up event, sending the note off message over MIDI if enabled,
+   * or stopping the note with the Magenta player.
+   * @param {number} pitch - The MIDI pitch number of the note to stop playing.
+   * @param {Object} button - The button element that was released to stop the note.
+   */
   playNoteUp(pitch, button) {
     // Send to MIDI out or play with the Magenta player.
     if (this.usingMidiOut) {
@@ -63,103 +107,39 @@ class Player {
     }
   }
 
-  // MIDI bits.
-  midiReady(midi) {
-    // Also react to device changes.
-    midi.addEventListener("statechange", (event) =>
-      this.initDevices(event.target)
-    );
-    this.initDevices(midi);
-  }
-
-  initDevices(midi) {
-    this.midiOut = [];
-    this.midiIn = [];
-
-    const outputs = midi.outputs.values();
-    for (
-      let output = outputs.next();
-      output && !output.done;
-      output = outputs.next()
-    ) {
-      this.midiOut.push(output.value);
-    }
-
-    const inputs = midi.inputs.values();
-    for (
-      let input = inputs.next();
-      input && !input.done;
-      input = inputs.next()
-    ) {
-      this.midiIn.push(input.value);
-      // TODO: should probably use the selected index from this.selectInElement for correctness
-      // but i'm hacking this together for a demo so...
-      input.value.onmidimessage = (msg) => this.getMIDIMessage(msg);
-    }
-
-    // No MIDI, no settings.
-    //btnSettings.hidden = (this.midiOut.length === 0 && this.midiIn.length === 0);
-    this.selectInElement.innerHTML = this.midiIn
-      .map((device) => `<option>${device.name}</option>`)
-      .join("");
-    this.selectOutElement.innerHTML = this.midiOut
-      .map((device) => `<option>${device.name}</option>`)
-      .join("");
-  }
-
-  sendMidiNoteOn(pitch, button) {
-    // -1 is sent when releasing the sustain pedal.
-    if (button === -1) button = 0;
-    //const msg = [0x90 + button, pitch, 0x7f];    // note on, full velocity.
-    const msg = [0x90, pitch, 0x7f]; // note on, full velocity.
-    this.midiOut[this.selectOutElement.selectedIndex].send(msg);
-  }
-
-  sendMidiNoteOff(pitch, button) {
-    // -1 is sent when releasing the sustain pedal.
-    if (button === -1) button = 0;
-    //const msg = [0x80 + button, pitch, 0x7f];    // note on, middle C, full velocity.
-    const msg = [0x80, pitch, 0x7f]; // note on, middle C, full velocity.
-    this.midiOut[this.selectOutElement.selectedIndex].send(msg);
-  }
-
-  getMIDIMessage(msg) {
-    if (!this.usingMidiIn) {
-      return;
-    }
-    const command = msg.data[0];
-    const button = msg.data[1];
-    const velocity = msg.data.length > 2 ? msg.data[2] : 0; // a velocity value might not be included with a noteOff command
-
-    switch (command) {
-      case 0x90: // note on
-        window.buttonDown(button, false);
-        break;
-      case 0x80: // note off
-        window.buttonUp(button);
-        break;
-    }
-  }
-
+  /**
+   * Starts playing the sequence from the given sequencer.
+   * @param {Sequencer} sequencer - The sequencer containing the sequence to play.
+   * @returns {Promise} A promise that resolves when playback starts.
+   */
   async start(sequencer) {
     return this.player.start(sequencer.getSequence());
   }
   isPlaying = () => {
     return this.player.isPlaying();
   };
+
+  /**
+   * Stops playback if currently playing.
+   */
   stop = () => {
     if (this.isPlaying()) {
       this.player.stop();
     }
-  }
+  };
 }
 
-
-
-/*************************
- * Floaty notes
- ************************/
+/**
+ * FloatyNotes handles the animation of notes floating up from piano keys.
+ * It stores a list of active notes, draws them on a canvas, advances their
+ * position each frame, and removes notes that move off screen.
+ */
 class FloatyNotes {
+  /**
+   * Constructor for FloatyNotes class.
+   * Initializes canvas and drawing context.
+   * Sets initial state for notes array, canvas, drawing context, and context height.
+   */
   constructor() {
     this.notes = []; // the notes floating on the screen.
 
@@ -171,12 +151,26 @@ class FloatyNotes {
     this.contextHeight = 0;
   }
 
+  /**
+   * Resizes the canvas to fill the window, adjusting the height based on the
+   * height of the white piano keys.
+   *
+   * @param {number} whiteNoteHeight - Height of the white piano keys
+   */
   resize(whiteNoteHeight) {
     this.canvas.width = window.innerWidth;
     this.canvas.height = this.contextHeight =
       window.innerHeight - whiteNoteHeight - 20;
   }
 
+  /**
+   * Adds a new note to the notes array to be animated and rendered.
+   *
+   * @param {number} button - Index of the piano key color in the COLORS array
+   * @param {number} x - X position to draw the note
+   * @param {number} width - Width of the note rectangle
+   * @returns {Object} The new note object that was added
+   */
   addNote(button, x, width) {
     const noteToPaint = {
       x: parseFloat(x),
@@ -190,10 +184,22 @@ class FloatyNotes {
     return noteToPaint;
   }
 
+  /**
+   * Stops the animation of a note by setting its "on" property to false.
+   *
+   * @param {Object} noteToPaint - The note object to stop animating.
+   */
   stopNote(noteToPaint) {
     noteToPaint.on = false;
   }
 
+  /**
+   * The drawLoop function handles animating all the note rectangles that have been added.
+   * It runs in a requestAnimationFrame loop to smoothly animate the notes moving up and down.
+   * The function clears the canvas, removes notes that have scrolled off screen, moves all
+   * active notes up by a small delta, fades notes out as they reach the bottom, and redraws
+   * all the rectangles in their new positions.
+   */
   drawLoop() {
     const dy = 3;
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
@@ -223,7 +229,15 @@ class FloatyNotes {
   }
 }
 
+/**
+ * Piano class representing a piano keyboard.
+ */
 class Piano {
+  /**
+   * Constructor for Piano class.
+   * Initializes configuration values for note widths and heights.
+   * Gets references to SVG element and SVG namespace.
+   */
   constructor() {
     this.config = {
       whiteNoteWidth: 20,
@@ -236,6 +250,12 @@ class Piano {
     this.svgNS = "http://www.w3.org/2000/svg";
   }
 
+  /**
+   * Resizes the piano to fit the browser window width.
+   * Calculates the width of white and black notes based on the total
+   * number of white notes that need to be rendered and the window width.
+   * Also sets the SVG element width and height.
+   */
   resize(totalWhiteNotes) {
     // i honestly don't know why some flooring is good and some is bad sigh.
     const ratio = window.innerWidth / totalWhiteNotes;
@@ -245,6 +265,13 @@ class Piano {
     this.svg.setAttribute("height", this.config.whiteNoteHeight);
   }
 
+  /**
+   * Draws the piano keyboard by creating SVG rectangle elements
+   * for each piano key. Handles both white and black keys, positioning
+   * them correctly based on provided configuration. Loops through the
+   * number of octaves, notes per octave, and handles black key positions
+   * separately. Updates the SVG contents and element sizing.
+   */
   draw() {
     this.svg.innerHTML = "";
     const halfABlackNote = this.config.blackNoteWidth / 2;
@@ -351,6 +378,13 @@ class Piano {
     }
   }
 
+  /**
+   * Highlights a note on the piano roll UI by finding the corresponding SVG rect element and setting its "active" and "class" attributes.
+   *
+   * @param {number} note - The MIDI note number to highlight
+   * @param {string} button - The color class to set on the rect element
+   * @returns {SVGRectElement} The highlighted rect element
+   */
   highlightNote(note, button) {
     // Show the note on the piano roll.
     const rect = this.svg.querySelector(`rect[data-index="${note}"]`);
@@ -363,11 +397,27 @@ class Piano {
     return rect;
   }
 
+  /**
+   * Clears the highlight styling from a note rectangle element.
+   *
+   * @param {SVGRectElement} rect - The note rectangle element to clear
+   */
   clearNote(rect) {
     rect.removeAttribute("active");
     rect.removeAttribute("class");
   }
 
+  /**
+   * Creates an SVG rect element and appends it to the SVG container.
+   *
+   * @param {number} index - The data index to assign to the rect
+   * @param {number} x - The x position of the rect
+   * @param {number} y - The y position of the rect
+   * @param {number} w - The width of the rect
+   * @param {number} h - The height of the rect
+   * @param {string} fill - The fill color of the rect
+   * @param {string} [stroke] - An optional stroke color for the rect
+   */
   makeRect(index, x, y, w, h, fill, stroke) {
     const rect = document.createElementNS(this.svgNS, "rect");
     rect.setAttribute("data-index", index);
@@ -385,86 +435,147 @@ class Piano {
   }
 }
 
-/*************************
- * Music Sequence
- ************************/
+/**
+ * MusicSequence handles storing and manipulating musical note data.
+ * Can add notes with pitch, duration, lowest piano key MIDI number, and tag.
+ * Keeps track of start/end times and total time.
+ * Provides methods to get notes, check if empty, clear, etc.
+ */
 class MusicSequence {
+  /**
+   * Constructor for MusicSequence class.
+   * Initializes empty arrays to store note data,
+   * and sets totalTime property to 0 to track sequence duration.
+   */
   constructor() {
     this.notes = [];
     this._all = [];
     this.totalTime = 0;
   }
 
-  addPitch(pitch, duration, {lowestPianoKeyMidiNote = 0, tag = ""}) {
+  /**
+   * Adds a note to the sequence.
+   * @param {number} pitch - The MIDI pitch value of the note
+   * @param {number} duration - The duration of the note in seconds
+   * @param {Object} options - Additional options
+   * @param {number} [options.lowestPianoKeyMidiNote=0] - The MIDI note number of the lowest piano key
+   * @param {string} [options.tag=""] - An optional tag to associate with the note
+   */
+  addPitch(pitch, duration, { lowestPianoKeyMidiNote = 0, tag = "" }) {
     pitch += lowestPianoKeyMidiNote;
     const startTime = this.totalTime;
     const endTime = startTime + duration;
-    const n = { pitch, startTime, endTime, tag }
+    const n = { pitch, startTime, endTime, tag };
     this.notes.push(n);
     this._all.push(n);
     this.totalTime = endTime;
   }
+  /**
+   * Gets the last note from the sequence.
+   * @returns {Object} The last note object without the tag property.
+   */
   getLastNote = () => {
     return this._getNotesWithoutTag(this.notes)[this.notes.length - 1];
   };
+  /**
+   * Gets the sequence of notes.
+   * @param {boolean} [onlyActive=true] - Whether to only return active notes or all notes including inactive ones
+   * @returns {Object} An object with the array of notes and the total time
+   */
   getSequence = (onlyActive = true) => {
     const repo = onlyActive ? this.notes : this._all;
     return {
       notes: this._getNotesWithoutTag(repo),
-      totalTime: this.notes[repo.length - 1]?.endTime ?? 0
+      totalTime: this.notes[repo.length - 1]?.endTime ?? 0,
     };
   };
+  /**
+   * Gets the sequence of notes filtered by the provided tag.
+   * @param {string} tag - The tag to filter notes by
+   * @param {boolean} [onlyActive=true] - Whether to only return active notes or all notes including inactive ones
+   * @returns {Object} An object with the array of filtered notes and the total time
+   */
   getSequencesByTag = (tag, onlyActive = true) => {
     const repo = onlyActive ? this.notes : this._all;
     if (!tag) {
-      console.warn('tag is not provided while quering sequences by tag, returning all notes');
+      console.warn(
+        "tag is not provided while quering sequences by tag, returning all notes"
+      );
       return this._getNotesWithoutTag(repo);
     }
-    const notes = this._getNotesWithoutTag(repo.filter(note => note.tag === tag));
+    const notes = this._getNotesWithoutTag(
+      repo.filter((note) => note.tag === tag)
+    );
     return {
       notes,
-      totalTime: notes[notes.length - 1]?.endTime ?? 0
+      totalTime: notes[notes.length - 1]?.endTime ?? 0,
     };
-  }
+  };
+  /**
+   * Checks if there are no notes in the sequence.
+   * @returns {boolean} True if there are no notes, false otherwise.
+   */
   isEmpty = () => {
     return this.notes.length === 0;
   };
+  /**
+   * Clears the sequence by resetting the notes array and total time.
+   */
   clear = () => {
+    /**
+     * Clears the sequence by resetting the notes array and total time.
+     * _getNotesWithoutTag is a private helper function that returns a copy
+     * of the notes array without the tag property to prevent mutation.
+     */
     this.notes = [];
     this.totalTime = 0;
-  }
+  };
   _getNotesWithoutTag = (notes) => {
     return notes.map((note) => {
       return {
         pitch: note.pitch,
         startTime: note.startTime,
-        endTime: note.endTime
-      }
-    })
-  }
+        endTime: note.endTime,
+      };
+    });
+  };
 }
 
-/*************************
- * Timer
- ************************/
+/**
+ * Timer class to start, pause, resume and reset a countdown timer.
+ * Handles creating the timer UI element, updating the countdown,
+ * and calling a callback when the timer expires.
+ */
 class Timer {
+  /**
+   * Constructor for Timer class
+   * Initializes timer properties:
+   * - timerContainer: DOM element to display timer info
+   * - isRunning: boolean tracking if timer is running
+   * - interval: timer interval ID
+   * - currentTime: current remaining time in seconds
+   */
   constructor() {
     this.timerContainer = document.getElementById("info-container");
     this.isRunning = false;
     this.interval = null;
     this.currentTime = 0;
   }
+  /**
+   * Starts the countdown timer.
+   * @param {Function} callback - Optional callback function to call when timer expires
+   * @param {number} seconds - Number of seconds to set the timer for
+   */
   start = (callback, seconds) => {
-    
     if (this.isRunning) return;
     this.currentTime = seconds;
     this.isRunning = true;
 
-    this.timerContainer.innerHTML = '';
+    this.timerContainer.innerHTML = "";
     this.toggleTimer();
-    
-    const pElement = document.createElement('p');
-    pElement.className = 'info-text';
+
+    const pElement = document.createElement("p");
+    pElement.className = "info-text";
     pElement.textContent = seconds;
     this.timerContainer.appendChild(pElement);
 
@@ -472,28 +583,46 @@ class Timer {
       pElement.textContent = this.currentTime - 1;
       if (this.currentTime === 0) {
         this.timerContainer.removeChild(pElement);
-        this.reset()
+        this.reset();
         if (callback && typeof callback === "function") callback();
       } else {
         this.currentTime--;
       }
     }, 1000);
   };
+  /**
+   * Resets the timer by:
+   * 1. Clearing the interval
+   * 2. Setting isRunning to false
+   * 3. Setting interval to null
+   * 4. Hiding the timer UI
+   */
   reset = () => {
     this.clear();
 
     this.isRunning = false;
     this.interval = null;
     this.toggleTimer();
-  }
+  };
+  /**
+   * Toggles the display style of the timer container
+   * element between block and none, depending on
+   * whether the timer is currently running.
+   */
   toggleTimer = () => {
-    this.timerContainer.style.display = this.isRunning ? 'block' : 'none';
-  }
+    this.timerContainer.style.display = this.isRunning ? "block" : "none";
+  };
+  /**
+   * Clears the timer interval if the timer is running.
+   * Warns if trying to clear when timer not running.
+   */
   clear = () => {
     if (!this.isRunning || !this.interval) {
-        console.warn('Cannot clear: Timer is not running or interval is undefined');
-        return;
-    };
+      console.warn(
+        "Cannot clear: Timer is not running or interval is undefined"
+      );
+      return;
+    }
     clearInterval(this.interval);
   };
 }
