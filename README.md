@@ -2,6 +2,8 @@
 
 Piano Buddy is an interactive, turn-based web application that blends user-generated piano melodies with AI-enhanced musical accompaniment. Using Magenta Music's RNN and PianoGenie, it offers a distinctive musical experience where users play the piano and the AI responds with complementary melodies.
 
+**Live Version:** [Piano Buddy Live](https://piano-buddy-fb9180660e4f.herokuapp.com/)
+
 ## Table of Contents
 
 - [Piano Buddy](#piano-buddy)
