@@ -142,7 +142,10 @@ function initEverything() {
     .getElementById("timerTextInput")
     .addEventListener(
       "change",
-      (event) => timerSeconds = parseInt(event.target.value)
+      (event) => {
+        timerSeconds = parseInt(event.target.value);
+        timer.setTimer(timerSeconds)
+      }
     );  
   document
     .getElementById("configBoxButton")

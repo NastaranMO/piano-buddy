@@ -489,6 +489,9 @@ class Timer {
   toggleTimer = () => {
     this.timerContainer.style.display = this.isRunning ? 'block' : 'none';
   }
+  setTimer = (seconds) => {
+    this.seconds = seconds
+  }
   clear = () => {
     if (!this.isRunning || !this.interval) {
         console.warn('Cannot clear: Timer is not running or interval is undefined');
