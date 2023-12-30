@@ -1,13 +1,13 @@
 /**
- * Generates a new music sequence using MusicRNN continuation.
- *
- * @param {INoteSequence} noteSequence - The input note sequence.
- * @param {Object} options - Options for the generation process.
- * @param {number} [options.stepsPerQuarter=2] - The number of steps per quarter note.
- * @param {number} [options.steps=50] - The number of steps to generate.
- * @param {number} [options.temperature=1.3] - The sampling temperature for randomness.
- * @returns {Promise<INoteSequence>} A promise that resolves to the generated music sequence.
+ * Generates a sample sequence by continuing the given noteSequence using an RNN model.
+ * @param {Object} noteSequence - The input noteSequence to continue.
+ * @param {Object} options - Options for the RNN continuation.
+ * @param {number} options.stepsPerQuarter - Quantization steps per quarter note.
+ * @param {number} options.steps - Number of steps to continue.
+ * @param {number} options.temperature - RNN sampling temperature.
+ * @returns {Object} The continued noteSequence.
  */
+
 async function getSampleRnn(
   noteSequence,
   options = { stepsPerQuarter: 2, steps: 50, temperature: 1.3 }
