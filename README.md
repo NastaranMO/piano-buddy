@@ -80,16 +80,17 @@ Open `http://localhost:8081` in a web browser after starting the server. Begin b
 sequenceDiagram
     actor User as User
     participant Buddy as Piano Buddy
-    participant RNN as MusicRNN
+    participant Genie as PianoGenie
     participant Seq as Music Sequencer
     participant Player as Player
     
-    Seq->>RNN: Initiates by pressing a key on the virtual piano 
+    User->>Buddy: Initiates by pressing a key on the virtual piano 
     Buddy->>Genie: Requests the next note from the PianoGenie
     Genie->>Buddy: Provides the next musical note
     Buddy->>Seq: Stores the received note for future reference
     Buddy->>Player: Sends the note to the Player for playback
     Player->>User: Plays the note, allowing the User to hear it
+
 ```
 
 ### AI-Generated Melody Continuation
@@ -108,6 +109,7 @@ sequenceDiagram
     RNN->>Buddy: Returns the generated notes
     Buddy->>Player: Sends the generated notes one-by-one for playback
     Player->>User: Plays the notes, allowing the User to hear the musical continuation
+
 
 ```
 
