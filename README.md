@@ -14,6 +14,9 @@ Piano Buddy is an interactive, turn-based web application that blends user-gener
     - [Installation](#installation)
   - [Usage](#usage)
   - [Code Structure](#code-structure)
+  - [Sequence Diagrams](#sequence-diagrams)
+    - [User-Initiated Melody](#user-initiated-melody)
+    - [AI-Generated Melody Continuation](#ai-generated-melody-continuation)
   - [Built With](#built-with)
   - [Author](#author)
   - [Acknowledgments](#acknowledgments)
@@ -68,6 +71,45 @@ Open `http://localhost:8081` in a web browser after starting the server. Begin b
 - `src/`: Source JavaScript files for the application.
 - `server.js`: Sets up the Express server.
 - `package.json`: Defines project metadata and dependencies.
+
+## Sequence Diagrams
+
+### User-Initiated Melody
+
+```mermaid
+sequenceDiagram
+    actor User as User
+    participant Buddy as Piano Buddy
+    participant RNN as MusicRNN
+    participant Seq as Music Sequencer
+    participant Player as Player
+    
+    Seq->>RNN: Initiates by pressing a key on the virtual piano 
+    Buddy->>Genie: Requests the next note from the PianoGenie
+    Genie->>Buddy: Provides the next musical note
+    Buddy->>Seq: Stores the received note for future reference
+    Buddy->>Player: Sends the note to the Player for playback
+    Player->>User: Plays the note, allowing the User to hear it
+```
+
+### AI-Generated Melody Continuation
+
+```mermaid
+sequenceDiagram
+    actor User as User
+    participant Buddy as Piano Buddy
+    participant RNN as MusicRNN
+    participant Seq as Music Sequencer
+    participant Player as Player
+    
+    Buddy->>Seq: Requests a list of notes played by the user in their last turn
+    Seq->>Buddy: Returns the list of notes
+    Buddy->>RNN: Provides the list of played notes and requests generation of continuation
+    RNN->>Buddy: Returns the generated notes
+    Buddy->>Player: Sends the generated notes one-by-one for playback
+    Player->>User: Plays the notes, allowing the User to hear the musical continuation
+
+```
 
 ## Built With
 
