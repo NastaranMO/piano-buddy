@@ -97,18 +97,21 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    actor User as User
-    participant Buddy as Piano Buddy
-    participant RNN as MusicRNN
-    participant Seq as Music Sequencer
-    participant Player as Player
-    
-    Buddy->>Seq: Requests a list of notes played by the user in their last turn
-    Seq->>Buddy: Returns the list of notes
-    Buddy->>RNN: Provides the list of played notes and requests generation of continuation
-    RNN->>Buddy: Returns the generated notes
-    Buddy->>Player: Sends the generated notes one-by-one for playback
-    Player->>User: Plays the notes, allowing the User to hear the musical continuation
+    loop Repeat until user provides positive feedback
+      actor User as User
+      participant Buddy as Piano Buddy
+      participant RNN as MusicRNN
+      participant Seq as Music Sequencer
+      participant Player as Player
+      
+      Buddy->>Seq: Requests a list of notes played by the user in their last turn
+      Seq->>Buddy: Returns the list of notes
+      Buddy->>RNN: Provides the list of played notes and requests the generation of a musical continuation
+      RNN->>Buddy: Returns the generated notes
+      Buddy->>Player: Sends the generated notes one by one for playback
+      Player->>User: Plays the notes, allowing the User to hear the musical continuation
+      User->>Buddy: Provides Feedback 
+    end
 
 
 ```
