@@ -8,6 +8,54 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
 
+  <!-- Basic SEO -->
+  <meta name="description"
+    content="Interactive turn-based web app blending user piano melodies with AI accompaniment using Magenta Music RNN and PianoGenie.">
+  <meta name="keywords"
+    content="AI music, piano, magenta.js, machine learning, music generation, Nastaran Moghadasi, interactive music">
+  <meta name="author" content="Nastaran Moghadasi">
+  <link rel="canonical" href="https://piano.nastaran.ai/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://piano.nastaran.ai/">
+  <meta property="og:title" content="Piano Buddy - AI Collaborative Music">
+  <meta property="og:description"
+    content="Interactive turn-based web app blending user piano melodies with AI accompaniment using Magenta Music RNN and PianoGenie.">
+  <meta property="og:image" content="https://piano.nastaran.ai/images/banner-normal.jpg">
+  <meta property="og:site_name" content="Piano Buddy">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Piano Buddy - AI Collaborative Music">
+  <meta name="twitter:description"
+    content="Interactive turn-based web app blending user piano melodies with AI accompaniment using Magenta Music RNN and PianoGenie.">
+  <meta name="twitter:image" content="https://piano.nastaran.ai/images/banner-normal.jpg">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Piano Buddy",
+      "url": "https://piano.nastaran.ai/",
+      "description": "Interactive turn-based web app blending user piano melodies with AI accompaniment using Magenta Music RNN and PianoGenie.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "author": {
+        "@type": "Person",
+        "name": "Nastaran Moghadasi",
+        "url": "https://nastaran.ai",
+        "sameAs": [
+          "https://www.linkedin.com/in/nastaran-moghadasi/",
+          "https://blog.nastaran.ai"
+        ]
+      },
+      "image": "https://piano.nastaran.ai/images/banner-normal.jpg",
+      "screenshot": "https://piano.nastaran.ai/images/banner-normal.jpg"
+    }
+  </script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/1.2.8/tf.min.js"></script>
 
   <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
@@ -30,13 +78,28 @@
   <script src="/js/buddy.js" defer></script>
 
 </head>
+<!-- Google Tag Manager -->
+<script>(function (w, d, s, l, i) {
+    w[l] = w[l] || []; w[l].push({
+      'gtm.start':
+        new Date().getTime(), event: 'gtm.js'
+    }); var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', 'GTM-5F7F3P3H');</script>
+<!-- End Google Tag Manager -->
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5F7F3P3H" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <div id="splash-container" class="splash">
-    <h1>🎹 Piano Buddy 🎹</h1>
+    <a href="https://nastaran.ai" target="_blank"><img src="/images/logo.png" alt="Piano Buddy" class="splash-logo"></a>
     <div class="splash-main">
       <p>
-      <p class="text-center">Welcome to <b>Piano Buddy</b>, your creative companion in the world of music!</p> <br />
+      <h1 class="text-center" style="font-size: 1.5em; margin-bottom: 0.5em;">Welcome to <b>Piano Buddy</b>, your
+        creative companion in the world of music!</h1> <br />
       🎵 Immerse yourself in the joy of collaborative melody-making, where you and our <b>AI</b> join forces to compose
       beautiful piano tunes.
 
@@ -72,6 +135,7 @@
   </div>
 
   <div class="loaded" hidden>
+    <a href="https://nastaran.ai" target="_blank"><img src="/images/logo.png" alt="Piano Buddy" class="app-logo"></a>
     <div class="background"></div>
     <canvas id="canvas"></canvas>
     <svg id="svg"></svg>
