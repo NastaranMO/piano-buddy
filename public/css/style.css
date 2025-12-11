@@ -1,34 +1,14 @@
-body {
-  padding-top: 100px;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  overflow: hidden;
-  width: 100vw;
-  background: url('/images/banner-normal.jpg') no-repeat center center fixed;
-  background-size: contain;
-  background-color: black;
-  color: white;
-  font-family: "Poppins", sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-  /* disable double-tap zoom */
-  overscroll-behavior-y: contain;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-html,
-body {
-  height: 100%;
-  width: 100%;
-  overflow: auto;
+:root {
+  --bg-color: #050510;
+  --text-color: #e0e0e0;
+  --primary-color: #6d28d9;
+  /* Deep Purple */
+  --accent-color: #06b6d4;
+  /* Cyan */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --font-main: 'Outfit', sans-serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -44,14 +24,100 @@ body {
   opacity: 0.3;
 }
 
-.background {
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  overflow: hidden;
+  /* Keep hidden for piano app context */
+  margin: 0;
+  padding: 0;
   width: 100vw;
   height: 100vh;
-  background: url('/images/banner-normal.jpg') no-repeat center center fixed;
-  background-size: contain;
-  background-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  overscroll-behavior-y: contain;
 }
 
+/* Background Effects */
+.background-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+  animation: float 20s infinite ease-in-out;
+}
+
+.orb-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--primary-color);
+  top: -100px;
+  left: -100px;
+}
+
+.orb-2 {
+  width: 300px;
+  height: 300px;
+  background: var(--accent-color);
+  bottom: -50px;
+  right: -50px;
+  animation-delay: -5s;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(30px, 50px);
+  }
+}
+
+/* Typography */
+h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -1px;
+  background: linear-gradient(to right, #fff, #cbd5e1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+}
+
+a,
+a:link,
+a:visited {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+
+/* Piano Colors - Preserving original hues but making them fit */
 .color-0 {
   background: #ee2b29;
   fill: #ee2b29;
@@ -121,74 +187,342 @@ canvas {
   transition: all 0.2s linear;
 }
 
-h1 {
-  text-transform: uppercase;
-  font-size: 40px;
+/* Splash Screen */
+.splash {
+  font-size: 1.1rem;
+  padding: 3rem;
+  line-height: 1.6;
+  width: 90%;
+  max-width: 700px;
+  margin: auto;
+  text-align: center;
+  border-radius: 24px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  overflow: auto;
+  max-height: 90vh;
 }
 
-.splash a:link,
-a:visited {
-  color: #cdf352;
+.splash h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .splash-main b {
-  background: #cdf352;
-  color: black;
-  padding: 0 4px;
+  color: var(--accent-color);
+  font-weight: 600;
 }
 
+.splash p {
+  margin-bottom: 1.5rem;
+  color: #cbd5e1;
+}
+
+/* Buttons */
+button.splash-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, var(--primary-color), #4c1d95);
+  color: white;
+  text-decoration: none;
+  padding: 1rem 2.5rem;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  margin: 2rem auto;
+  width: auto;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+button.splash-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(109, 40, 217, 0.4);
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  color: white;
+}
+
+button.splash-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+button.splash-button.small {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+button.splash-button.small:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.splash-button.loading span {
+  animation: pulsing-fade 1.2s ease-in-out infinite;
+}
+
+@keyframes pulsing-fade {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Controls (Piano Keys) */
 .controls {
   display: flex;
   position: absolute;
-  /* center hack */
-  width: 80vw;
+  width: 90vw;
+  max-width: 1000px;
   left: 50%;
   transform: translateX(-50%);
   bottom: 20px;
-  height: 100px;
+  height: 120px;
   z-index: 2;
+  gap: 4px;
 }
 
 .controls button {
   border: none;
-  box-shadow: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   margin: 0;
   padding: 0;
   flex-grow: 1;
   height: 100%;
   width: 100%;
-  transition: transform 0.2s linear;
-  font-family: inherit;
-  font-size: 20px;
-  font-weight: bold;
-  -webkit-user-select: none;
-  /* Safari 3.1+ */
-  -moz-user-select: none;
-  /* Firefox 2+ */
-  -ms-user-select: none;
-  /* IE 10+ */
-  user-select: none;
-  /* Standard syntax */
-  line-height: 1;
-}
-
-.controls button[active] {
-  transform: scale(0.9, 0.9);
-}
-
-.controls button.settings {
-  position: relative;
-  background: transparent;
-  fill: white;
+  transition: transform 0.1s linear, filter 0.2s;
+  border-radius: 0 0 8px 8px;
   cursor: pointer;
 }
 
-.controls button.settings:hover {
-  fill: #cdf352;
+.controls button:hover {
+  filter: brightness(1.2);
 }
 
-.controls button span {
+.controls button[active] {
+  transform: scale(0.95);
+  filter: brightness(1.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) inset;
+}
+
+
+/* Dialogs */
+.dialog {
+  background: var(--glass-bg);
+  color: var(--text-color);
+  padding: 2rem;
+  z-index: 10;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 500px;
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  overflow: auto;
+}
+
+.dialog h2 {
+  color: var(--accent-color);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.dialog p {
+  margin-bottom: 1.5rem;
+}
+
+.hint {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+/* Radio Buttons */
+.control-indicator {
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  background: transparent;
+}
+
+label.radio {
+  position: relative;
+  display: inline-block;
+  padding-left: 30px;
+  margin-right: 20px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+label.radio>input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+label.radio>input:checked~.control-indicator {
+  background-color: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-color);
+}
+
+label.radio>.control-indicator {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  width: 18px;
+  height: 18px;
   pointer-events: none;
+}
+
+/* Inputs */
+.dialog select,
+.dialog input[type="number"] {
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  margin-bottom: 1rem;
+  width: 100%;
+  height: auto;
+  transition: var(--transition);
+}
+
+.dialog input[type="number"]:focus {
+  border-color: var(--accent-color);
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* Logos */
+.splash-logo {
+  max-width: 250px;
+  width: 80%;
+  height: auto;
+  margin: 0 auto 2rem;
+  display: block;
+  filter: drop-shadow(0 0 20px rgba(109, 40, 217, 0.3));
+}
+
+.app-logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 120px;
+  height: auto;
+  z-index: 100;
+  transition: var(--transition);
+}
+
+.app-logo:hover {
+  filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.5));
+}
+
+.built-with {
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-top: 2rem;
+}
+
+/* Info container */
+#info-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.info-text {
+  font-size: 1.5rem;
+  color: #fff;
+  background: rgba(28, 44, 66, 0.8);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media screen and (max-width: 700px) {
+  .controls {
+    height: 80px;
+    width: 100vw;
+    bottom: 0;
+    gap: 1px;
+    border-radius: 0;
+  }
+
+  .controls button {
+    border-radius: 0;
+  }
+
+  canvas {
+    top: 70px;
+  }
+
+  .splash {
+    padding: 1.5rem;
+    width: 95%;
+  }
+
+  h1,
+  .splash h1 {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  body {
+    font-size: 14px;
+  }
+
+  .app-logo {
+    width: 100px;
+    top: 15px;
+    left: 15px;
+  }
+
+  .dialog {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  button.splash-button {
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+  }
 }
 
 .rotate-phone {
@@ -200,7 +534,7 @@ a:visited {
   height: 60px;
   width: 60px;
   margin: 0 auto;
-  fill: white;
+  fill: var(--text-color);
   animation: rotate 4s infinite ease-in-out;
 }
 
@@ -219,493 +553,5 @@ a:visited {
   95%,
   100% {
     transform: rotate(0deg);
-  }
-}
-
-@media screen and (max-width: 700px) {
-  .controls {
-    height: 70px;
-    width: 100vw;
-  }
-
-  canvas {
-    top: 70px;
-  }
-}
-
-@media screen and (max-width: 500px) {
-
-  /* Body and font adjustments */
-  body {
-    font-size: 14px;
-    /* Smaller font size for body text */
-  }
-
-  /* Heading adjustments */
-  h1 {
-    font-size: 24px;
-    /* Smaller font size for headings */
-  }
-
-  /* Button size adjustments */
-  .splash-button {
-    font-size: 18px;
-    /* Smaller font size for buttons */
-  }
-
-  /* Piano keys adjustments */
-  .controls button {
-    height: 50px;
-    /* Adjust the height of the piano keys */
-  }
-
-  /* Splash container and dialog box adjustments */
-  .splash,
-  .dialog {
-    width: 90%;
-    /* Use more screen width */
-    padding: 10px;
-    /* Reduce padding */
-  }
-
-  /* Controls layout adjustments */
-  .controls {
-    bottom: 10px;
-    /* Adjust position */
-    height: 60px;
-    /* Reduce height */
-  }
-
-  /* Canvas and SVG adjustments */
-  canvas,
-  #svg {
-    max-width: 100%;
-    /* Ensure they don't overflow the screen width */
-    height: auto;
-    /* Adjust height automatically */
-  }
-
-  /* Info container and its contents */
-  #info-container {
-    width: 90%;
-    /* Adjust width to use more of the screen */
-    margin: 10px auto;
-    /* Center it with margin */
-    padding: 10px;
-    /* Add padding for better spacing */
-    border-radius: 10px;
-    /* Rounded corners */
-    background-color: rgba(255, 255, 255, 0.1);
-    /* Slight background color */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    /* Subtle shadow for depth */
-    overflow: hidden;
-    /* Ensures container respects border radius */
-  }
-
-  .info-text {
-    font-size: 16px !important;
-    line-height: 1.4;
-    /* Adjust line height for better text flow */
-    color: #fff;
-    /* Adjust text color if needed */
-    text-align: center;
-    /* Align text to the left */
-  }
-
-  .hint-playing {
-    display: none !important;
-    /* Display as block for proper spacing */
-    font-size: 14px !important;
-    /* Smaller font size for hints */
-    color: #cdf352 !important;
-    /* Different color for emphasis */
-    margin-top: 10px !important;
-    /* Extra space above the hint text */
-  }
-
-  /* Dialog box improvements */
-  .dialog {
-    max-height: 70vh;
-    /* Limit the height */
-    overflow-y: auto;
-    /* Allow scrolling */
-  }
-}
-
-button.splash-button {
-  cursor: pointer;
-  margin: 40px auto;
-  padding: 14px;
-  font-family: inherit;
-  font-size: 22px;
-  display: block;
-  border: 2px solid #cdf352;
-  background-color: transparent;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #cdf352;
-  text-align: center;
-  transition: background-color 0.2s linear;
-  width: 200px;
-}
-
-button.splash-button:hover {
-  background-color: #cdf352;
-  color: black;
-}
-
-button.splash-button.small {
-  padding: 8px;
-  font-size: 16px;
-}
-
-.splash-button.loading span {
-  animation: pulsing-fade 1.2s ease-in-out infinite;
-}
-
-@keyframes pulsing-fade {
-  50% {
-    opacity: 0.3;
-  }
-}
-
-/***********************
-   * Radio buttons
-***********************/
-.control-indicator {
-  border: solid #cdf352 2px;
-  color: #cdf352;
-  border-radius: 2px;
-}
-
-label.radio {
-  position: relative;
-  display: inline-block;
-  padding-left: 24px;
-  margin-right: 24px;
-  cursor: pointer;
-}
-
-label.radio>input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  z-index: -1;
-}
-
-label.radio>input:checked~.control-indicator {
-  background-color: #cdf352;
-}
-
-label.radio>.control-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-#inputNumButtons {
-  vertical-align: middle;
-}
-
-#info-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 10;
-  overflow: auto;
-}
-
-#settingsBox {
-  overflow: auto;
-}
-
-.info-text {
-  font-size: 36px;
-  color: #fff;
-  background-color: #1c2c42;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-  margin-bottom: 16px;
-  /* Adjusted margin for better spacing */
-  line-height: 1.5;
-}
-
-.btn-green,
-.btn-red {
-  cursor: pointer;
-  padding: 12px 24px;
-  /* Adjusted padding for better appearance */
-  font-family: inherit;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  transition: background-color 0.2s linear, color 0.2s linear;
-}
-
-.btn-green {
-  background-color: #4caf50;
-  color: white;
-  margin-right: 8px;
-  /* Added margin between buttons */
-}
-
-.btn-red {
-  background-color: #ee2b29;
-  color: white;
-}
-
-.btn-blue {
-  cursor: pointer;
-  padding: 12px 24px;
-  font-family: inherit;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  background-color: #2196f3;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: background-color 0.2s linear, color 0.2s linear;
-}
-
-.btn-green:hover,
-.btn-red:hover,
-.btn-blue:hover {
-  background-color: #1c2c42;
-  color: #cdf352;
-}
-
-.hint-playing {
-  display: block;
-  font-size: 14px;
-  color: #808080;
-  margin-top: 8px;
-  /* Adjusted margin for better spacing */
-}
-
-.hint-playing span {
-  display: block;
-  height: 4px;
-  width: 100%;
-  background-color: #cdf352;
-  margin-top: 8px;
-  /* Adjusted margin for better spacing */
-}
-
-.btn-disabled {
-  background-color: #808080;
-  /* Grey background */
-  color: #555;
-  /* Dark grey text color */
-  cursor: not-allowed;
-  /* Change cursor to indicate not clickable */
-  opacity: 0.7;
-  /* Reduced opacity to indicate disabled state */
-  box-shadow: none;
-  /* Remove box shadow */
-}
-
-.btn-disabled:hover {
-  background-color: #808080;
-  /* Grey background on hover */
-  color: #555;
-  /* Dark grey text color on hover */
-}
-
-.label {
-  margin-bottom: 3;
-}
-
-.hint {
-  color: #808080;
-}
-
-.dialog button.splash-button.small {
-  padding: 8px 16px;
-  /* Adjusted padding for better appearance */
-}
-
-.dialog button.splash-button.small span {
-  animation: none;
-  /* Removed pulsing-fade animation */
-}
-
-.dialog button.splash-button.loading span {
-  animation: none;
-  /* Removed pulsing-fade animation */
-}
-
-.dialog {
-  font-weight: 100;
-  background: #1c2c42;
-  color: white;
-  padding: 24px;
-  z-index: 10;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
-  max-width: 500px;
-  border: 2px solid #cdf352;
-  box-shadow: 8px 8px 0 #cdf352;
-  text-align: left;
-  overflow: auto;
-}
-
-.dialog select,
-.dialog input[type="number"] {
-  color: white;
-  font-family: inherit;
-  font-size: 14px;
-  border: none;
-  border-bottom: 2px solid #cdf352;
-  background: transparent;
-  box-shadow: none;
-  margin-bottom: 16px;
-  width: 100%;
-  height: 25px;
-  padding: 4px;
-}
-
-.dialog button.splash-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-}
-
-.dialog h2 {
-  color: #cdf352;
-  font-size: 24px;
-  margin-bottom: 16px;
-}
-
-.dialog p {
-  margin-bottom: 16px;
-}
-
-.dialog label.radio {
-  margin-right: 16px;
-}
-
-.dialog button.splash-button.small {
-  width: auto;
-  margin-right: 8px;
-}
-
-.dialog button.splash-button.small:last-child {
-  margin-right: 0;
-}
-
-.dialog button.splash-button.small:hover {
-  background-color: #cdf352;
-  color: black;
-}
-
-.splash {
-  font-size: 18px;
-  padding: 20px;
-  line-height: 1.6;
-  width: 80%;
-  max-width: 600px;
-  margin: auto;
-  text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  background-color: rgba(20, 30, 48, 0.85);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-  overflow: auto;
-}
-
-.splash h1 {
-  text-transform: uppercase;
-  font-size: 40px;
-  text-align: center;
-  color: #cdf352;
-  margin-bottom: 20px;
-}
-
-.splash p {
-  margin-bottom: 16px;
-}
-
-.splash .text-center {
-  text-align: center;
-}
-
-.splash b {
-  background: #cdf352;
-  color: black;
-  padding: 0 4px;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.button-container button.splash-button {
-  cursor: pointer;
-  padding: 14px 28px;
-  font-family: inherit;
-  font-size: 22px;
-  display: inline-block;
-  border: 2px solid #cdf352;
-  background-color: transparent;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #cdf352;
-  transition: background-color 0.2s linear, color 0.2s linear;
-  margin: 0 10px;
-}
-
-.button-container button.splash-button:hover {
-  background-color: #cdf352;
-  color: black;
-}
-
-.built-with {
-  text-align: center;
-  font-size: 0.9em;
-  opacity: 0.8;
-}
-
-/* Logo Styles */
-.splash-logo {
-  max-width: 300px;
-  width: 80%;
-  height: auto;
-  margin: 0 auto 30px;
-  display: block;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
-}
-
-.app-logo {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 150px;
-  height: auto;
-  z-index: 100;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-}
-
-@media screen and (max-width: 500px) {
-  .app-logo {
-    width: 100px;
-    top: 10px;
-    left: 10px;
   }
 }
