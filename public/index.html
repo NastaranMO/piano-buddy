@@ -1,137 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Piano Buddy</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/1.2.8/tf.min.js"></script>
+<head>
+  <title>Piano Buddy</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- <link id="favicon" rel="icon" href="https://cdn.glitch.com/69295b46-7d64-4ff6-8223-94cba13ee115%2Ffavicon-32x32.png?1542832173836" type="image/x-icon"> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/1.2.8/tf.min.js"></script>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+  <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- <link id="favicon" rel="icon" href="https://cdn.glitch.com/69295b46-7d64-4ff6-8223-94cba13ee115%2Ffavicon-32x32.png?1542832173836" type="image/x-icon"> -->
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
 
 
-    <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.3.1"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.3.1"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script> -->
 
-    <!-- <script src="/js/helpers.js" defer></script>
+  <!-- <script src="/js/helpers.js" defer></script>
 
     <script src="/js/script.js" defer></script>
     <script src="/js/rnn.js" defer></script> -->
-    <script src="/js/buddy.js" defer></script>
+  <script src="/js/buddy.js" defer></script>
 
-  </head>  
-  <body>  
-    <div id="splash-container" class="splash">
-      <h1>🎹 Piano Buddy 🎹</h1>
-      <div class="splash-main">        
-        <p>
-          <p class="text-center">Welcome to <b>Piano Buddy</b>, your creative companion in the world of music!</p> <br/>
-          🎵 Immerse yourself in the joy of collaborative melody-making, where you and our <b>AI</b> join forces to compose beautiful piano tunes.
-          
-          Play your part on the piano, explore creative nuances, and let the magic unfold as our AI seamlessly blends in. Ready to embark on a musical adventure? Let's create something extraordinary together! 🚀
-        </p>
-        <p>Have some fun pretending you're a piano virtuoso using machine learning! 🙂</p>
-        <p>Use the <b>1-8</b> numbered keys on your keyboard (or the home row <b>a-f</b> and <b>j-;</b>) or <b>touch</b> the 
-          coloured blocks to play the piano.
-        </p>
+</head>
 
-        <div class="rotate-phone" hidden>
-          <div class="phone-icon">
-           <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24"><path d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 20h-4v-1h4v1zm3.25-3H6.75V4h10.5v14z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
-          </div>
-          This works best if your phone is rotated in landscape mode. <br>
+<body>
+  <div id="splash-container" class="splash">
+    <h1>🎹 Piano Buddy 🎹</h1>
+    <div class="splash-main">
+      <p>
+      <p class="text-center">Welcome to <b>Piano Buddy</b>, your creative companion in the world of music!</p> <br />
+      🎵 Immerse yourself in the joy of collaborative melody-making, where you and our <b>AI</b> join forces to compose
+      beautiful piano tunes.
+
+      Play your part on the piano, explore creative nuances, and let the magic unfold as our AI seamlessly blends in.
+      Ready to embark on a musical adventure? Let's create something extraordinary together! 🚀
+      </p>
+      <p>Have some fun pretending you're a piano virtuoso using machine learning! 🙂</p>
+      <p>Use the <b>1-8</b> numbered keys on your keyboard (or the home row <b>a-f</b> and <b>j-;</b>) or <b>touch</b>
+        the
+        coloured blocks to play the piano.
+      </p>
+
+      <div class="rotate-phone" hidden>
+        <div class="phone-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24">
+            <path
+              d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 20h-4v-1h4v1zm3.25-3H6.75V4h10.5v14z" />
+            <path d="M0 0h24v24H0z" fill="none" />
+          </svg>
         </div>
-
-        <button class="splash-button loading" id="playBtn" disabled onclick="showMainScreen()" autofocus><span>Loading...</span></button>
+        This works best if your phone is rotated in landscape mode. <br>
       </div>
-      <p class="built-with">
-        Built with <a target="_blank" href="https://magenta.tensorflow.org">magenta.js</a>
-      </p>
-      <p class="built-with">
-        Nastaran Moghadasi
-      </p>
+
+      <button class="splash-button loading" id="playBtn" disabled onclick="showMainScreen()"
+        autofocus><span>Loading...</span></button>
     </div>
-    
-    <div class="loaded" hidden>
-      <div class="background"></div>
-      <canvas id="canvas"></canvas>
-      <svg id="svg"></svg>
-    
-      <div class="controls" id="controls">
-        <button class="btn-note color color-0" id="btn0" data-id="0"><span></span></button>
-        <button class="btn-note color color-1" id="btn1" data-id="1"><span></span></button>
-        <button class="btn-note color color-2" id="btn2" data-id="2"><span></span></button>
-        <button class="btn-note color color-3" id="btn3" data-id="3"><span></span></button>
-        <button class="btn-note color color-4" id="btn4" data-id="4"><span></span></button>
-        <button class="btn-note color color-5" id="btn5" data-id="5"><span></span></button>
-        <button class="btn-note color color-6" id="btn6" data-id="6"><span></span></button>
-        <button class="btn-note color color-7" id="btn7" data-id="7"><span></span></button>
-        <!-- <button class="settings" id="btnSettings">
+    <p class="built-with">
+      Built with <a target="_blank" href="https://magenta.tensorflow.org">magenta.js</a>
+    </p>
+    <p class="built-with">
+      <a href="https://nastaran.ai" target="_blank">Nastaran Moghadasi</a>
+    </p>
+  </div>
+
+  <div class="loaded" hidden>
+    <div class="background"></div>
+    <canvas id="canvas"></canvas>
+    <svg id="svg"></svg>
+
+    <div class="controls" id="controls">
+      <button class="btn-note color color-0" id="btn0" data-id="0"><span></span></button>
+      <button class="btn-note color color-1" id="btn1" data-id="1"><span></span></button>
+      <button class="btn-note color color-2" id="btn2" data-id="2"><span></span></button>
+      <button class="btn-note color color-3" id="btn3" data-id="3"><span></span></button>
+      <button class="btn-note color color-4" id="btn4" data-id="4"><span></span></button>
+      <button class="btn-note color color-5" id="btn5" data-id="5"><span></span></button>
+      <button class="btn-note color color-6" id="btn6" data-id="6"><span></span></button>
+      <button class="btn-note color color-7" id="btn7" data-id="7"><span></span></button>
+      <!-- <button class="settings" id="btnSettings">
          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 20 20"><path fill="none" d="M0 0h20v20H0V0z"/><path d="M15.95 10.78c.03-.25.05-.51.05-.78s-.02-.53-.06-.78l1.69-1.32c.15-.12.19-.34.1-.51l-1.6-2.77c-.1-.18-.31-.24-.49-.18l-1.99.8c-.42-.32-.86-.58-1.35-.78L12 2.34c-.03-.2-.2-.34-.4-.34H8.4c-.2 0-.36.14-.39.34l-.3 2.12c-.49.2-.94.47-1.35.78l-1.99-.8c-.18-.07-.39 0-.49.18l-1.6 2.77c-.1.18-.06.39.1.51l1.69 1.32c-.04.25-.07.52-.07.78s.02.53.06.78L2.37 12.1c-.15.12-.19.34-.1.51l1.6 2.77c.1.18.31.24.49.18l1.99-.8c.42.32.86.58 1.35.78l.3 2.12c.04.2.2.34.4.34h3.2c.2 0 .37-.14.39-.34l.3-2.12c.49-.2.94-.47 1.35-.78l1.99.8c.18.07.39 0 .49-.18l1.6-2.77c.1-.18.06-.39-.1-.51l-1.67-1.32zM10 13c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"/></svg>
         </button> -->
-      </div>
     </div>
-    <!-- <div id="timer-container" style="display: none;">
+  </div>
+  <!-- <div id="timer-container" style="display: none;">
         <p id="timer"></p>
     </div> -->
-    <div id="info-container" style="display: none;">
-    </div>
-    <div class="dialog" id="settingsBox" hidden>
-      <h2>Model Configs</h2>
-      <p>
-        Steps Per Quarter
-        <br>
-        <span class="hint">Higher values generate faster melodies</span>
-        <br>
-        <label class="radio">
-          <input name="num" type="radio" id="spqButton1" >
-          <span class="control-indicator"></span>
-          1
-        </label>
-        <label class="radio">
-          <input name="num" type="radio" id="spqButton2" checked>
-          <span class="control-indicator"></span>
-          2
-        </label>
-        <label class="radio">
-          <input name="num" type="radio" id="spqButton4">
-          <span class="control-indicator"></span>
-          4
-        </label>
-      </p>
-      <p>
-        Steps
-        <br>
-        <span class="hint">Higher values generate longer melodies</span>
-        <br>
-        <input type="number" value="20" id="stepsTextInput" step="1" min="10" max="50"/>
-      </p>
-      <p>
-        Temperature
-        <br>
-        <span class="hint">Controls the randomness of the generated melody. Higher values produce more diverse melodies.</span>
-        <br>
-        <input type="number" value="1.3" min="0.5" max="2" id="temperatureTextInput" step="0.1"/>
-      </p>
-      <h2>User Config</h2>
-      <p>
-        Timer
-        <br>
-        <span class="hint">Set the duration for each round of music to inspire the AI (in seconds)</span>
-        <br>
-        <input type="number" value="10" min="5" max="30" id="timerTextInput" step="1"/>
-      </p>
-      <button class="splash-button small" id="configBoxButton" display="none">Close</button>
-      <button class="splash-button small" id="feedbackButton" display="none">Gimme another try!</button>
-    </div>
-    
-  </body>
+  <div id="info-container" style="display: none;">
+  </div>
+  <div class="dialog" id="settingsBox" hidden>
+    <h2>Model Configs</h2>
+    <p>
+      Steps Per Quarter
+      <br>
+      <span class="hint">Higher values generate faster melodies</span>
+      <br>
+      <label class="radio">
+        <input name="num" type="radio" id="spqButton1">
+        <span class="control-indicator"></span>
+        1
+      </label>
+      <label class="radio">
+        <input name="num" type="radio" id="spqButton2" checked>
+        <span class="control-indicator"></span>
+        2
+      </label>
+      <label class="radio">
+        <input name="num" type="radio" id="spqButton4">
+        <span class="control-indicator"></span>
+        4
+      </label>
+    </p>
+    <p>
+      Steps
+      <br>
+      <span class="hint">Higher values generate longer melodies</span>
+      <br>
+      <input type="number" value="20" id="stepsTextInput" step="1" min="10" max="50" />
+    </p>
+    <p>
+      Temperature
+      <br>
+      <span class="hint">Controls the randomness of the generated melody. Higher values produce more diverse
+        melodies.</span>
+      <br>
+      <input type="number" value="1.3" min="0.5" max="2" id="temperatureTextInput" step="0.1" />
+    </p>
+    <h2>User Config</h2>
+    <p>
+      Timer
+      <br>
+      <span class="hint">Set the duration for each round of music to inspire the AI (in seconds)</span>
+      <br>
+      <input type="number" value="10" min="5" max="30" id="timerTextInput" step="1" />
+    </p>
+    <button class="splash-button small" id="configBoxButton" display="none">Close</button>
+    <button class="splash-button small" id="feedbackButton" display="none">Gimme another try!</button>
+  </div>
+
+</body>
+
 </html>
